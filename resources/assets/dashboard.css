@@ -270,3 +270,7 @@ body,
 .content .content-wrapper{
     padding: 6.4rem 0 0 ;
 }
+
+.layui-layer.layui-layer-loading{
+    box-shadow: none !important;
+}

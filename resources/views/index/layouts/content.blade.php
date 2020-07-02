@@ -24,7 +24,6 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/2.1.4/jquery.js"></script>
     <script>
         Dcat.ready(function () {
-            console.log('windown', $(window).height());
             $('#tab-pane').height($(window).height());
             //Note! You cannot use both layout-boxed and fixed at the same time. Anything else can be mixed together.
             if(!$('body').hasClass('layout-boxed'))
@@ -163,7 +162,6 @@
                     }
                 }
                 var icon = '<i class="fa fa-file-text"></i>';
-                console.log($(this).find('i.fa'))
                 if ($(this).find('i.fa').length) {
                     icon = $(this).find('i.fa').prop("outerHTML");
                 }
@@ -181,7 +179,6 @@
                     icon: icon
                 });
 
-                console.log('aaa');
 
                 $('.dark-mode body').addClass('dark-mode');
 
@@ -243,12 +240,23 @@
                     width: "100%"
                 });
             }
-            console.log('css', $('#pjax-container').css('padding-top').replace('px', ''))
             //
             // $('#tab-pane').height($(window).height());
             $('.content-wrapper,#app,#tab-content').css('height',$(window).height()-$('#pjax-container').css('padding-top').replace('px', ''));
             // $('.content-wrapper,#app,#tab-content').css('height',$('#pjax-container').height());
 
+            const theme = localStorage.getItem('dcat-admin-theme-mode');
+            if(theme === 'dark') {
+                $('iframe').each(function(){
+                    $(this).contents().find('body').addClass('dark-mode');
+                })
+            }
+
+            $('.dark-mode-switcher').click(function(){
+                $('iframe').each(function(){
+                    $(this).contents().find('body').toggleClass('dark-mode');
+                })
+            });
         });
     </script>
     @include('admin::partials.toastr')

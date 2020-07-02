@@ -51,14 +51,9 @@ results found.</span></div>
         $(this).find('i').toggleClass('icon-circle icon-disc')
     })
 
-
-    console.log('windown', $(window).height());
+    $('.dark-mode-switcher').click(function(){
+        console.log('sub dark-mode-switcher')
+    });
     $('#tab-pane').height($(window).height());
-    // Dcat.ready(function(){
-        const theme = localStorage.getItem('dcat-admin-theme-mode');
-        console.log('111111111111')
-        if(theme == 'dark') {
-            $('body').addClass('dark-mode');
-        }
-    // })
+
 </script>

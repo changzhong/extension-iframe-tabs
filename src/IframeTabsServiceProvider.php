@@ -34,10 +34,11 @@ class IframeTabsServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole() && $assets = $extension->assets()) {
             $this->publishes(
-                [$assets => public_path('vendor/dcat-admin-ext/iframe-tabs')],
+                [$assets => public_path('vendors/dcat-admin-ext/iframe-tabs')],
                 'iframe-tabs'
             );
         }
+
 
         $this->app->booted(function () use($extension) {
            $extension->routes(__DIR__ . '/../routes/web.php');
