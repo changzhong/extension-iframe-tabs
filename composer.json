@@ -3,12 +3,12 @@
     "description": "dcat-admin extension iframe-tabs",
     "type": "library",
     "keywords": ["dcat-admin", "extension"],
-    "homepage": "https://github.com/dcat-admin-extensions/iframe-tabs",
+    "homepage": "https://github.com/changzhong/extension-iframe-tabs",
     "license": "MIT",
     "authors": [
         {
-            "name": "your name",
-            "email": "your email"
+            "name": "chang",
+            "email": "632867905@qq.com"
         }
     ],
     "require": {
