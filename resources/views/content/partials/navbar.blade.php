@@ -51,9 +51,39 @@ results found.</span></div>
         $(this).find('i').toggleClass('icon-circle icon-disc')
     })
 
-    $('.dark-mode-switcher').click(function(){
-        console.log('sub dark-mode-switcher')
-    });
     $('#tab-pane').height($(window).height());
 
+    const theme = localStorage.getItem('dcat-admin-theme-mode');
+    if(theme === 'dark') {
+        $('body').addClass('dark-mode');
+    }
+
+
+    Dcat.ready(function(){
+        console.log('reade');
+        setTimeout(function(){
+            $('.tree-quick-edit').off('click').click(function () {
+            url = $(this).data('url');
+            location.href = url;
+            // return ;
+            // $.ajax({
+            //     url: url+'?_dialog_form_=1',
+            //     success: function (template) {
+            //
+            //             layer.open({
+            //                 type: 1,
+            //                 title: 'aaa',
+            //                 shadeClose: true,
+            //                 shade: 0.3,
+            //                 offset: "20%",
+            //                 shadeClose : false,
+            //                 area: ['700px', '670px'],
+            //                 content: template//传入一个链接地址 比如：http://www.baidu.com
+            //             });
+            //         }
+            //     })
+            });
+        }, 1000);
+
+    })
 </script>

@@ -245,13 +245,6 @@
             $('.content-wrapper,#app,#tab-content').css('height',$(window).height()-$('#pjax-container').css('padding-top').replace('px', ''));
             // $('.content-wrapper,#app,#tab-content').css('height',$('#pjax-container').height());
 
-            const theme = localStorage.getItem('dcat-admin-theme-mode');
-            if(theme === 'dark') {
-                $('iframe').each(function(){
-                    $(this).contents().find('body').addClass('dark-mode');
-                })
-            }
-
             $('.dark-mode-switcher').click(function(){
                 $('iframe').each(function(){
                     $(this).contents().find('body').toggleClass('dark-mode');

@@ -44,14 +44,13 @@ class IframeTabsServiceProvider extends ServiceProvider
            $extension->routes(__DIR__ . '/../routes/web.php');
         });
 
-        $layer_path = $extension->config('layer_path', 'vendor/dcat-admin-ext/iframe-tabs/layer/layer.js');
+        $layer_path = $extension->config('layer_path', '');
 
         if (!file_exists(public_path($layer_path))) {
             $layer_path = '';
         }
 
         Admin::booting(function () use ($layer_path) {
-            Admin::js('vendor/dcat-admin-ext/iframe-tabs/bootstrap-tab.js');
             Admin::js('vendor/dcat-admin-ext/iframe-tabs/bootstrap-tab.js');
 
             if ($layer_path) {
@@ -88,8 +87,8 @@ class IframeTabsServiceProvider extends ServiceProvider
 
                     $this->initSubPage();
 
-                    //Override view content hide partials.header and partials.sidebar
                     \View::prependNamespace('admin', __DIR__ . '/../resources/views/content');
+                    //Override view content hide partials.header and partials.sidebar
                     //add scritp 'Back to top' in content
                     $this->contentScript();
 

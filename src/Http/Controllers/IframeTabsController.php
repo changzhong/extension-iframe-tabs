@@ -49,7 +49,6 @@ class IframeTabsController extends Controller
             $navbar->left(view('iframe-tabs::ext.tabs'));
             $navbar->right(view('iframe-tabs::ext.options'));
         });
-
         return $content;
     }
 
@@ -58,35 +57,7 @@ class IframeTabsController extends Controller
         return $content
             ->header('Defautl page')
             ->description('Defautl page')
-            ->body('Defautl page have not seted ,pleace edit config in `config/admin.php`'
-                . "<pre>'extensions' => [
-                'iframe-tabs' => [
-                     // Set to `false` if you want to disable this extension
-                    'enable' => true,
-                    // The controller and action of dashboard page `/admin/dashboard`
-                    'home_action' => App\Admin\Controllers\HomeController::class . '@index',//edit here
-                    // Default page tab-title
-                    'home_title' => 'Home',
-                    // Default page tab-title icon
-                    'home_icon' => 'fa-home',
-                    // wheath show icon befor titles for all tab
-                    'use_icon' => true,
-                    // dashboard css
-                    'tabs_css' =>'vendor/laravel-admin-ext/iframe-tabs/dashboard.css',
-                    // layer.js path , if you do not user laravel-admin-ext\cropper , set another one
-                    'layer_path' => 'vendor/laravel-admin-ext/cropper/layer/layer.js',
-                    // href links do not open in tab .
-                    'pass_urls' => ['/admin/auth/logout', '/admin/auth/lock'],
-                    // When login session state of a tab-page was expired , force top-level window goto login page .
-                    'force_login_in_top' => true,
-                    // tabs left offset
-                    'tabs_left'  => 42,
-                    // bind click event of table actions [edit / view]
-                    'bind_urls' => 'popup', //[ popup / new_tab / none]
-                    //table actions dom selecter
-                    'bind_selecter' => '.box-body table.table tbody a.grid-row-view,.box-body table.table tbody a.grid-row-edit,.box-header .pull-right .btn-success,.popup',
-                    //.box-body table.table tr>td a,.box-header .pull-right .btn-success
-                ]
-            ],</pre>");
+            ->body("aaaaaaaaa");
     }
+
 }
