@@ -222,10 +222,19 @@
             if (!$(".navbar-custom-menu>ul>*:first").hasClass('tab-options')) {
                 $(".navbar-custom-menu>ul>*:first").before($('.navbar-custom-menu>ul>li.tab-options'));
             }
+            var visibleWidth = $(window).width() - $('.main-sidebar').width() - $('.navbar-wrapper .navbar-collapse>.navbar-nav').width()-$('.navbar-wrapper #tabOptions').parent().width()-50;
+
+
+            $('.dropdown-toggle').click(function(){
+                setTimeout(function(){
+                    $('#tabOptions .dropdown-menu').removeClass('show');
+                }, 3000);
+            });
+
 
             $('.content-tabs').css({
                 'left': window.tabs_left + 'px',
-                'width': '100%',
+                'width': visibleWidth,
 
             });
 

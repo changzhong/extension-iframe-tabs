@@ -270,14 +270,14 @@ var scrollToTab = function (element) {
         marginRightVal = calSumWidth($(element).nextAll()); //后面所有tab的总宽度
     //一些按钮(向左,向右滑动)的总宽度
     // tab(a标签)显示区域的总宽度
-    var visibleWidth = $(window).width() - $('.main-sidebar').width() - $('.navbar-wrapper .navbar-collapse>.navbar-nav').outerWidth()-$('.navbar-wrapper .navbar-collapse>.d-flex').outerWidth();
+    var visibleWidth = $(window).width() - $('.main-sidebar').width() - $('.navbar-wrapper .navbar-collapse>.navbar-nav').width()-$('.navbar-wrapper #tabOptions').parent().width()-50;
 
-    console.log('前', marginLeftVal, '后', marginRightVal, '全', visibleWidth, 'outerWidth', $(".page-tabs-content").outerWidth())
+    // console.log('前', marginLeftVal, '后', marginRightVal, '全', visibleWidth, 'outerWidth', $(".page-tabs-content").outerWidth())
     //将要滚动的长度
     var scrollVal = 0;
     if ($(".page-tabs-content").outerWidth() < visibleWidth) {
         //所有的tab都可以显示的情况
-        console.log('全部显示')
+        // console.log('全部显示')
         scrollVal = 0;
     } else if (marginRightVal <= (visibleWidth - $(element).outerWidth(true) - $(element).next().outerWidth(true))) {
         //向右滚动
@@ -299,10 +299,11 @@ var scrollToTab = function (element) {
         marginLeft: 0 - scrollVal + 'px'
     }, "fast");
 };
+
 //滚动条滚动到左边
 var scrollTabLeft = function () {
     var marginLeftVal = Math.abs(parseInt($('.page-tabs-content').css('margin-left')));
-    var visibleWidth = $('.navbar.navbar-static-top').outerWidth() - window.tabs_left - $('.navbar-custom-menu').outerWidth();
+    var visibleWidth = $(window).width() - $('.main-sidebar').width() - $('.navbar-wrapper .navbar-collapse>.navbar-nav').width()-$('.navbar-wrapper #tabOptions').parent().width()-50;
     var scrollVal = 0;
     if ($(".page-tabs-content").width() < visibleWidth) {
         return false;
@@ -329,7 +330,7 @@ var scrollTabLeft = function () {
 //滚动条滚动到右边
 var scrollTabRight = function () {
     var marginLeftVal = Math.abs(parseInt($('.page-tabs-content').css('margin-left')));
-    var visibleWidth = $('.navbar.navbar-static-top').outerWidth() - window.tabs_left - $('.navbar-custom-menu').outerWidth();
+    var visibleWidth = $(window).width() - $('.main-sidebar').width() - $('.navbar-wrapper .navbar-collapse>.navbar-nav').width()-$('.navbar-wrapper #tabOptions').parent().width()-50;
     var scrollVal = 0;
     if ($(".page-tabs-content").width() < visibleWidth) {
         return false;

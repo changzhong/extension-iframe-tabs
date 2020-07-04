@@ -271,6 +271,7 @@ body,
     padding: 6.4rem 0 0 ;
 }
 
-.layui-layer.layui-layer-loading{
+body.dark-mode .layui-layer.layui-layer-loading, body .layui-layer.layui-layer-loading{
     box-shadow: none !important;
+    background: none !important;
 }

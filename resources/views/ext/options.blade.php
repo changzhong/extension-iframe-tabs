@@ -1,4 +1,4 @@
-<ul class="nav navbar-nav float-right">
+<ul class="nav navbar-nav float-right" id="tabOptions">
 
 <li class="dropdown dropdown-user nav-item">
     <a href="#" class="dropdown-toggle nav-link dropdown-user-link" data-toggle="dropdown">

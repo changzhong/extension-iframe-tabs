@@ -60,9 +60,9 @@ results found.</span></div>
 
 
     Dcat.ready(function(){
-        console.log('reade');
+        // console.log('reade');
         setTimeout(function(){
-            $('.tree-quick-edit').off('click').click(function () {
+            $('.tree-quick-edit, .dialog-create').off('click').click(function () {
             url = $(this).data('url');
             location.href = url;
             // return ;
@@ -83,7 +83,7 @@ results found.</span></div>
             //         }
             //     })
             });
-        }, 1000);
+        }, 500);
 
     })
 </script>
