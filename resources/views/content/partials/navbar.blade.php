@@ -60,30 +60,6 @@ results found.</span></div>
 
 
     Dcat.ready(function(){
-        // console.log('reade');
-        setTimeout(function(){
-            $('.tree-quick-edit, .dialog-create').off('click').click(function () {
-            url = $(this).data('url');
-            location.href = url;
-            // return ;
-            // $.ajax({
-            //     url: url+'?_dialog_form_=1',
-            //     success: function (template) {
-            //
-            //             layer.open({
-            //                 type: 1,
-            //                 title: 'aaa',
-            //                 shadeClose: true,
-            //                 shade: 0.3,
-            //                 offset: "20%",
-            //                 shadeClose : false,
-            //                 area: ['700px', '670px'],
-            //                 content: template//传入一个链接地址 比如：http://www.baidu.com
-            //             });
-            //         }
-            //     })
-            });
-        }, 500);
 
     })
 </script>

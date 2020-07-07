@@ -258,28 +258,30 @@ function editTabTitle(pageId, title) {
 var calSumWidth = function (element) {
     var width = 0;
     $(element).each(function () {
-        width += $(this).outerWidth(true);
+        width += $(this).width();
     });
     return width;
 };
 //滚动到指定选项卡
 var scrollToTab = function (element) {
+    // console.log('element', element);
     //element是tab(a标签),装有标题那个
     //div.content-tabs > div.page-tabs-content
     var marginLeftVal = calSumWidth($(element).prevAll()), //前面所有tab的总宽度
-        marginRightVal = calSumWidth($(element).nextAll()); //后面所有tab的总宽度
-    //一些按钮(向左,向右滑动)的总宽度
-    // tab(a标签)显示区域的总宽度
-    var visibleWidth = $(window).width() - $('.main-sidebar').width() - $('.navbar-wrapper .navbar-collapse>.navbar-nav').width()-$('.navbar-wrapper #tabOptions').parent().width()-50;
+        marginRightVal = calSumWidth($(element).nextAll()), //后面所有tab的总宽度
+        visibleWidth = $('.content-tabs').outerWidth(), //tab(a标签)显示区域的总宽度
+        scrollVal = 0, //将要滚动的长度
+        tabWidth = $(".page-tabs-content").outerWidth(),
+        selfWidth = $(element).outerWidth(true); //自己的宽度
 
-    // console.log('前', marginLeftVal, '后', marginRightVal, '全', visibleWidth, 'outerWidth', $(".page-tabs-content").outerWidth())
-    //将要滚动的长度
-    var scrollVal = 0;
-    if ($(".page-tabs-content").outerWidth() < visibleWidth) {
+    // console.log('窗口宽度', visibleWidth, 'tab宽度', tabWidth)
+    var nextWidth = $(element).next().size() ? $(element).next().outerWidth(true) : 0;
+    if (tabWidth < visibleWidth) {
         //所有的tab都可以显示的情况
         // console.log('全部显示')
         scrollVal = 0;
-    } else if (marginRightVal <= (visibleWidth - $(element).outerWidth(true) - $(element).next().outerWidth(true))) {
+    } else if (marginRightVal <= (visibleWidth - selfWidth - nextWidth)) {
+        // console.log('向右滚动')
         //向右滚动
         //marginRightVal(后面所有tab的总宽度)小于可视区域-(当前tab和下一个tab的宽度)
         if ((visibleWidth - $(element).next().outerWidth(true)) > marginRightVal) {
@@ -290,9 +292,10 @@ var scrollToTab = function (element) {
                 tabElement = $(tabElement).prev();
             }
         }
-    } else if (marginLeftVal > (visibleWidth - $(element).outerWidth(true) - $(element).prev().outerWidth(true))) {
+    } else if (marginLeftVal > (visibleWidth - selfWidth - nextWidth)) {
+        // console.log('向左滚动', (visibleWidth - $(element).outerWidth(true) - $(element).prev().outerWidth(true)))
         //向左滚动
-        scrollVal = marginLeftVal - $(element).prev().outerWidth(true);
+        scrollVal = marginLeftVal - (visibleWidth - selfWidth - nextWidth);
     }
     //执行动画
     $('.page-tabs-content').animate({
@@ -303,7 +306,7 @@ var scrollToTab = function (element) {
 //滚动条滚动到左边
 var scrollTabLeft = function () {
     var marginLeftVal = Math.abs(parseInt($('.page-tabs-content').css('margin-left')));
-    var visibleWidth = $(window).width() - $('.main-sidebar').width() - $('.navbar-wrapper .navbar-collapse>.navbar-nav').width()-$('.navbar-wrapper #tabOptions').parent().width()-50;
+    var visibleWidth = $(window).width() - $('.main-sidebar').outerWidth(true) - $('.navbar-wrapper .navbar-collapse>.navbar-nav').outerWidth(true) - $('.navbar-wrapper #tabOptions').parent().outerWidth(true) - 50;
     var scrollVal = 0;
     if ($(".page-tabs-content").width() < visibleWidth) {
         return false;
@@ -329,24 +332,14 @@ var scrollTabLeft = function () {
 };
 //滚动条滚动到右边
 var scrollTabRight = function () {
-    var marginLeftVal = Math.abs(parseInt($('.page-tabs-content').css('margin-left')));
-    var visibleWidth = $(window).width() - $('.main-sidebar').width() - $('.navbar-wrapper .navbar-collapse>.navbar-nav').width()-$('.navbar-wrapper #tabOptions').parent().width()-50;
-    var scrollVal = 0;
-    if ($(".page-tabs-content").width() < visibleWidth) {
+    var visibleWidth = $('.content-tabs').outerWidth(), //tab(a标签)显示区域的总宽度
+        scrollVal = 0, //将要滚动的长度
+        tabWidth = $(".page-tabs-content").outerWidth();
+
+    if (tabWidth < visibleWidth) {
         return false;
     } else {
-        var tabElement = $(".menu_tab:first");
-        var offsetVal = 0;
-        while ((offsetVal + $(tabElement).outerWidth(true)) <= marginLeftVal) {
-            offsetVal += $(tabElement).outerWidth(true);
-            tabElement = $(tabElement).next();
-        }
-        offsetVal = 0;
-        while ((offsetVal + $(tabElement).outerWidth(true)) < (visibleWidth) && tabElement.length > 0) {
-            offsetVal += $(tabElement).outerWidth(true);
-            tabElement = $(tabElement).next();
-        }
-        scrollVal = calSumWidth($(tabElement).prevAll());
+        scrollVal = tabWidth - visibleWidth;
         if (scrollVal > 0) {
             $('.page-tabs-content').animate({
                 marginLeft: 0 - scrollVal + 'px'
@@ -397,8 +390,7 @@ var closeOtherTabs = function (isAll) {
 };
 
 function scrollTabCurrent() {
-    var pageId = getActivePageId();
-    scrollToTab(pageId);
+    scrollToTab($('.page-tabs-content').find('.active'));
 }
 
 //激活Tab,通过id
@@ -415,8 +407,7 @@ function activeTabByPageId(pageId) {
 
     if (/\|/.test(titel_text)) {
         titel_text = titel_text.replace(/\|.+$/, '| ' + $title.text());
-    }
-    else {
+    } else {
         titel_text += ' | ' + $title.text();
     }
     $('head title').text(titel_text);

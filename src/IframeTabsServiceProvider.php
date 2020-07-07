@@ -34,7 +34,7 @@ class IframeTabsServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole() && $assets = $extension->assets()) {
             $this->publishes(
-                [$assets => public_path('vendors/dcat-admin-ext/iframe-tabs')],
+                [$assets => public_path('vendors/dcat-admin-extensions/iframe-tabs')],
                 'iframe-tabs'
             );
         }
@@ -51,7 +51,8 @@ class IframeTabsServiceProvider extends ServiceProvider
         }
 
         Admin::booting(function () use ($layer_path) {
-            Admin::js('vendor/dcat-admin-ext/iframe-tabs/bootstrap-tab.js');
+            Admin::js('vendors/dcat-admin-extensions/iframe-tabs/bootstrap-tab.js');
+            Admin::js('vendors/dcat-admin-extensions/iframe-tabs/extends.js');
 
             if ($layer_path) {
                 Admin::js($layer_path);
@@ -70,7 +71,7 @@ class IframeTabsServiceProvider extends ServiceProvider
                     //Override view index hide partials.footer
                     \View::prependNamespace('admin', __DIR__ . '/../resources/views/index');
 
-                    Admin::css($extension->config('tabs_css', 'vendor/dcat-admin-ext/iframe-tabs/dashboard.css'));
+                    Admin::css($extension->config('tabs_css', 'vendors/dcat-admin-extensions/iframe-tabs/dashboard.css'));
 
                     $layout = config('admin.layout', ['fixed']);
                     if (count($layout) == 1) { //['fixed sidebar-mini']
@@ -93,7 +94,7 @@ class IframeTabsServiceProvider extends ServiceProvider
                     $this->contentScript();
 
                     //Override content style ,reset style of '#pjax-container' margin-left:0
-                    Admin::css('vendor/dcat-admin-ext/iframe-tabs/content.css');
+                    Admin::css('vendors/dcat-admin-extensions/iframe-tabs/content.css');
 
                     config(['admin.layout' => ['fixed']]); // iframe page no need layout ,set default to fixed .
                 }

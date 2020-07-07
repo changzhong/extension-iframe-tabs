@@ -222,15 +222,12 @@
             if (!$(".navbar-custom-menu>ul>*:first").hasClass('tab-options')) {
                 $(".navbar-custom-menu>ul>*:first").before($('.navbar-custom-menu>ul>li.tab-options'));
             }
-            var visibleWidth = $(window).width() - $('.main-sidebar').width() - $('.navbar-wrapper .navbar-collapse>.navbar-nav').width()-$('.navbar-wrapper #tabOptions').parent().width()-50;
+            var visibleWidth = $('.navbar-wrapper').width() - $('.navbar-wrapper .navbar-collapse>.navbar-nav').outerWidth(true)-$('.navbar-wrapper #tabOptions').parent().outerWidth(true)-50;
 
 
-            $('.dropdown-toggle').click(function(){
-                setTimeout(function(){
-                    $('#tabOptions .dropdown-menu').removeClass('show');
-                }, 3000);
+            $('#tabOptions .dropdown-menu').mouseleave(function(){
+                $(this).removeClass('show');
             });
-
 
             $('.content-tabs').css({
                 'left': window.tabs_left + 'px',
