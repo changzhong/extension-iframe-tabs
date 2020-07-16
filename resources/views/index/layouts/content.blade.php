@@ -20,14 +20,15 @@
     <div class="tab-content " id="tab-content">
         {!! $content !!}
     </div>
-{{--    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>--}}
+    {{--    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>--}}
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/2.1.4/jquery.js"></script>
     <script>
         Dcat.ready(function () {
+
+
             $('#tab-pane').height($(window).height());
             //Note! You cannot use both layout-boxed and fixed at the same time. Anything else can be mixed together.
-            if(!$('body').hasClass('layout-boxed'))
-            {
+            if (!$('body').hasClass('layout-boxed')) {
                 $('body').addClass('fixed'); //layout Fixed: use the class .fixed to get a fixed header and sidebar.
             }
 
@@ -128,7 +129,8 @@
                 }
             });
 
-            $('body').on('click', '.nav-sidebar li a.nav-link,.navbar-nav>li a,.sidebar .user-panel a,.sidebar-form .dropdown-menu li a', function () {
+            $('.iframe-link').off('click').on('click', function () {
+                event.preventDefault();
                 if ($(this).hasClass('container-refresh')) {
                     var pageId = getActivePageId();
 
@@ -136,12 +138,12 @@
 
                     iframe[0].contentWindow.$.admin.reload();
 
-                    $.admin.toastr.success(refresh_succeeded, '', { positionClass: "toast-top-center" });
+                    $.admin.toastr.success(refresh_succeeded, '', {positionClass: "toast-top-center"});
 
                     return false;
                 }
 
-                var url = $(this).attr('data-href');
+                var url = $(this).attr('href');
                 if (!url || url == '#' || /^javascript|\(|\)/i.test(url)) {
                     return;
                 }
@@ -167,7 +169,7 @@
                 }
                 var span = $(this).find('p');
 
-                var path = url.replace(/^(https?:\/\/[^\/]+?)(\/.+)$/,'$2');
+                var path = url.replace(/^(https?:\/\/[^\/]+?)(\/.+)$/, '$2');
 
                 var id = path == window.home_uri ? '_admin_dashboard' : path.replace(/\W/g, '_');
                 addTabs({
@@ -222,10 +224,10 @@
             if (!$(".navbar-custom-menu>ul>*:first").hasClass('tab-options')) {
                 $(".navbar-custom-menu>ul>*:first").before($('.navbar-custom-menu>ul>li.tab-options'));
             }
-            var visibleWidth = $('.navbar-wrapper').width() - $('.navbar-wrapper .navbar-collapse>.navbar-nav').outerWidth(true)-$('.navbar-wrapper #tabOptions').parent().outerWidth(true)-50;
+            var visibleWidth = $('.navbar-wrapper').width() - $('.navbar-wrapper .navbar-collapse>.navbar-nav').outerWidth(true) - $('.navbar-wrapper #tabOptions').parent().outerWidth(true) - 50;
 
 
-            $('#tabOptions .dropdown-menu').mouseleave(function(){
+            $('#tabOptions .dropdown-menu').mouseleave(function () {
                 $(this).removeClass('show');
             });
 
@@ -239,8 +241,7 @@
                 $('.container-refresh').off('click');
             }, 1000);
 
-            window.handleIframeContent = function ()
-            {
+            window.handleIframeContent = function () {
                 $(".tab_iframe").css({
                     height: "100%",
                     width: "100%"
@@ -248,12 +249,23 @@
             }
             //
             // $('#tab-pane').height($(window).height());
-            $('.content-wrapper,#app,#tab-content').css('height',$(window).height()-$('#pjax-container').css('padding-top').replace('px', ''));
+
+            $(window).resize(function(){
+                $('.content-wrapper,#app,#tab-content').css('height', $(window).height() - $('#pjax-container').css('padding-top').replace('px', ''));
+            });
+
+            $('.content-wrapper,#app,#tab-content').css('height', $(window).height() - $('#pjax-container').css('padding-top').replace('px', ''));
             // $('.content-wrapper,#app,#tab-content').css('height',$('#pjax-container').height());
 
-            $('.dark-mode-switcher').click(function(){
-                $('iframe').each(function(){
+            $('.dark-mode-switcher').click(function () {
+                $('iframe').each(function () {
                     $(this).contents().find('body').toggleClass('dark-mode');
+                })
+            });
+
+            $('.menu-toggle').click(function () {
+                $('iframe').each(function () {
+                    $(this).contents().find('body').toggleClass('sidebar-collapse');
                 })
             });
         });

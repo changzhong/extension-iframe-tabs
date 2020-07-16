@@ -10,21 +10,12 @@
         </li>
     @elseif(! isset($item['children']))
         <li class="nav-item">
-            @if($item['uri'] == 'auth/menu')
-                <a href="{{ $builder->getUrl($item['uri']) }}" target="_blank" class="nav-link {!! $builder->isActive($item) ? 'active' : '' !!}">
-                    {!! str_repeat('&nbsp;', $layer) !!}<i class="fa {{ $item['icon'] ?: 'feather icon-circle' }}"></i>
-                    <p>
-                        {{ $builder->translate($item['title']) }}
-                    </p>
-                </a>
-                @else
             <a href="jsvascript:openTab();" data-href="{{ $builder->getUrl($item['uri']) }}" class="nav-link {!! $builder->isActive($item) ? 'active' : '' !!}">
                 {!! str_repeat('&nbsp;', $layer) !!}<i class="fa {{ $item['icon'] ?: 'feather icon-circle' }}"></i>
                 <p>
                     {{ $builder->translate($item['title']) }}
                 </p>
             </a>
-                @endif
         </li>
     @else
         @php
