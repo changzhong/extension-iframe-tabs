@@ -5,6 +5,8 @@ use Dcat\Admin\Extension\IframeTabs\Http\Controllers;
 use Dcat\Admin\Extension\IframeTabs\Http\Controllers\IframeTabsController;
 
 $iframeTabs = new Dcat\Admin\Extension\IframeTabs\IframeTabs();
+
+//默认首页
 Route::get('iframe-tabs', Controllers\IframeTabsController::class.'@index')->name('iframes.index');
 
 Route::get('/', IframeTabsController::class . '@index')->name('iframes.index');

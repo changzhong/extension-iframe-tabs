@@ -263,7 +263,7 @@ body,
 
 @media (min-width: 768px) {
     body:not(.sidebar-mini-md) .content-wrapper, body:not(.sidebar-mini-md) .main-footer, body:not(.sidebar-mini-md) .main-header{
-        margin-left: 0;
+        /*margin-left: 0;*/
     }
 }
 
@@ -275,3 +275,13 @@ body.dark-mode .layui-layer.layui-layer-loading, body .layui-layer.layui-layer-l
     box-shadow: none !important;
     background: none !important;
 }
+
+.bookmark-wrapper{
+    margin-top: 0;
+    height: 50px;
+}
+
+.navbar-container{
+    height: 50px;
+}
+

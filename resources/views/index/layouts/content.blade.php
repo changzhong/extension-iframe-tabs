@@ -20,35 +20,38 @@
     <div class="tab-content " id="tab-content">
         {!! $content !!}
     </div>
-    {{--    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>--}}
-    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/2.1.4/jquery.js"></script>
     <script>
+        //语言包
+        window.refresh_current = "{{ $trans['refresh_current'] }}";
+        window.open_in_new = "{{ $trans['open_in_new'] }}";
+        window.open_in_pop = "{{ $trans['open_in_pop'] }}";
+        window.refresh_succeeded = "{{ $trans['refresh_succeeded'] }}";
+
+
+        window.use_icon = "{{ $use_icon }}" == '1';
+        window.pass_urls = '{{ $pass_urls }}'.split(',');
+        window.home_title = '{{ $home_title }}';
+        window.home_uri = '{{ $home_uri }}';
+        window.home_icon = '{{ $home_icon }}';
+        window.iframes_index = '{{ $iframes_index }}';
+        window.tabs_left = '{{ $tabs_left }}';
+        window.bind_urls = '{{ $bind_urls }}';
+        window.bind_selecter = '{{ $bind_selecter }}';
+
         Dcat.ready(function () {
 
 
             $('#tab-pane').height($(window).height());
-            //Note! You cannot use both layout-boxed and fixed at the same time. Anything else can be mixed together.
-            if (!$('body').hasClass('layout-boxed')) {
-                $('body').addClass('fixed'); //layout Fixed: use the class .fixed to get a fixed header and sidebar.
-            }
 
-            window.refresh_current = "{{ $trans['refresh_current'] }}";
-            window.open_in_new = "{{ $trans['open_in_new'] }}";
-            window.open_in_pop = "{{ $trans['open_in_pop'] }}";
-            window.refresh_succeeded = "{{ $trans['refresh_succeeded'] }}";
-
-            window.use_icon = "{{ $use_icon }}" == '1';
-            window.pass_urls = '{{ $pass_urls }}'.split(',');
-            window.home_title = '{{ $home_title }}';
-            window.home_uri = '{{ $home_uri }}';
-            window.home_icon = '{{ $home_icon }}';
-            window.iframes_index = '{{ $iframes_index }}';
-            window.tabs_left = '{{ $tabs_left }}';
-            window.bind_urls = '{{ $bind_urls }}';
-            window.bind_selecter = '{{ $bind_selecter }}';
-
+            //弹出的窗口列表
             window.Pops = [];
 
+            /**
+             * 弹窗
+             * @param url 地址
+             * @param title 标题
+             * @param area 大小
+             */
             window.openPop = function (url, title, area) {
                 if (!area) {
                     area = [$('#tab-content').width() + 'px', ($('#tab-content').height() - 5) + 'px'];
@@ -70,6 +73,15 @@
                 return index;
             }
 
+            /**
+             * 打开新iframe新页面
+             * @param url 网址
+             * @param title 标题
+             * @param icon 图标
+             * @param page_id 页面id
+             * @param close 是否允许关闭
+             * @param urlType 类型
+             */
             window.openTab = function (url, title, icon, page_id, close, urlType) {
                 if (!url) {
                     alert('url is empty.');
@@ -83,6 +95,13 @@
                     icon = '<i class="fa fa-file-text"></i>';
                 }
 
+                if (url.indexOf("?") !== -1  ) {
+                    url += '&iframe=1'
+                } else {
+                    url += '?iframe=1'
+                }
+
+                console.log('url', url);
                 addTabs({
                     id: page_id || url.replace(/\W/g, '_'),
                     title: title || 'New page',
@@ -93,68 +112,33 @@
                 });
             }
 
-            if (!window.layer) {
-                window.layer = {
-                    load: function () {
-                        var html = '<div style="z-index:999;margin:0 auto;position:fixed;top:90px;left:50%;" class="loading-message"><img src="/vendor/laravel-admin-ext/iframe-tabs/images/loading-spinner-grey.gif" /></div>';
-                        $('.tab-content').append(html);
-                        return 1;
-                    },
-                    close: function (index) {
-                        $('.tab-content .loading-message').remove();
-                    },
-                    open: function () {
-                        alert('layer.js dose not work.');
-                    }
-                };
-            }
-
+            //顶部的标签点击事件,更改左边菜单的选中
             $('body').on('click', '#tab-menu a.menu_tab', function () {
                 var pageId = getPageId(this);
-                var $ele = null;
-                $(".sidebar-menu li a").each(function () {
-                    var $meun = $(this);
-                    if ($meun.attr('data-pageid') == pageId) {
-                        $ele = $meun;
+                $(".nav-sidebar li a").each(function () {
+                    var $ele = $(this);
+                    if ($ele.attr('data-pageid') == pageId) {
+                        if(!$ele.parents('.has-treeview').hasClass('menu-open')) {
+                            $('.menu-open .nav-treeview').css({'display': 'none'});
+                            $('.menu-open').removeClass('menu-open');
+                            $ele.parents('.has-treeview').addClass('menu-open');
+                            $ele.parents('.has-treeview .nav-treeview').css({'display': 'block'});
+                        }
+                        $('.nav-sidebar').find('a.active').removeClass('active');
+                        $ele.addClass('active');
                         return false; //退出循环
                     }
                 });
-                if ($ele) {
-                    $ele.parents('.treeview').not('.active').find('> a').trigger('click');
-                    setTimeout(function () {
-                        var $parent = $ele.parent().addClass('active');
-                        $parent.siblings('.treeview.active').removeClass('active');
-                        $parent.siblings().removeClass('active').find('li').removeClass('active')
-                    }, 500);
-                }
             });
 
+            //左边菜单点击事件
             $('.iframe-link').off('click').on('click', function () {
                 event.preventDefault();
-                if ($(this).hasClass('container-refresh')) {
-                    var pageId = getActivePageId();
-
-                    var iframe = findIframeById(pageId);
-
-                    iframe[0].contentWindow.$.admin.reload();
-
-                    $.admin.toastr.success(refresh_succeeded, '', {positionClass: "toast-top-center"});
-
-                    return false;
-                }
-
                 var url = $(this).attr('href');
                 if (!url || url == '#' || /^javascript|\(|\)/i.test(url)) {
                     return;
                 }
 
-                if ($(this).attr('target') == '_blank') {
-                    return;
-                }
-
-                if ($(this).hasClass('iframes-pass-url')) {
-                    return;
-                }
 
                 if (window.pass_urls) {
                     for (var i in window.pass_urls) {
@@ -163,6 +147,7 @@
                         }
                     }
                 }
+
                 var icon = '<i class="fa fa-file-text"></i>';
                 if ($(this).find('i.fa').length) {
                     icon = $(this).find('i.fa').prop("outerHTML");
@@ -172,6 +157,7 @@
                 var path = url.replace(/^(https?:\/\/[^\/]+?)(\/.+)$/, '$2');
 
                 var id = path == window.home_uri ? '_admin_dashboard' : path.replace(/\W/g, '_');
+
                 addTabs({
                     id: id,
                     title: span.length ? span.text() : $(this).text().length ? $(this).text() : '*',
@@ -186,18 +172,14 @@
 
                 $(this).attr('data-pageid', id);
 
-                var toggle = false;
-                if ($(this).parents('.dropdown').size() && (toggle = $(this).parents('.dropdown').find('.dropdown-toggle'))) {
-                    toggle.trigger('click');
-                }
-
-                if ($(this).parents('.sidebar-form') && (toggle = $(this).parents('.sidebar-form').find('.input-group-btn button'))) {
-                    toggle.trigger('click');
-                }
+                //更改菜单为选中
+                $('.nav-sidebar').find('a.active').removeClass('active');
+                $(this).addClass('active');
 
                 return false;
             });
 
+            //首页
             if (window == top) {
                 addTabs({
                     id: '_admin_dashboard',
@@ -213,61 +195,41 @@
                 $('body').html('....');
             }
 
-            $('body').on('click', '.main-header a.logo', function () {
-                return false;
-            });
-
-            $('.navbar-custom-menu').css('background-color', $('.main-header .navbar').css('background-color'));
-
-            $('.navbar-custom-menu').show(); // delete it in future
-
-            if (!$(".navbar-custom-menu>ul>*:first").hasClass('tab-options')) {
-                $(".navbar-custom-menu>ul>*:first").before($('.navbar-custom-menu>ul>li.tab-options'));
-            }
-            var visibleWidth = $('.navbar-wrapper').width() - $('.navbar-wrapper .navbar-collapse>.navbar-nav').outerWidth(true) - $('.navbar-wrapper #tabOptions').parent().outerWidth(true) - 50;
+            //logo的链接点击
+            // $('body').on('click', '.navbar-header a', function () {
+            //     return false;
+            // });
 
 
+
+            //右上角标签操作鼠标滑出隐藏菜单
             $('#tabOptions .dropdown-menu').mouseleave(function () {
                 $(this).removeClass('show');
+                $(this).parent().removeClass('show');
             });
 
+            //顶部标签容器宽度
+            var visibleWidth = $('.navbar-wrapper').width() - $('.navbar-wrapper .navbar-collapse>.navbar-nav').outerWidth(true) - $('.navbar-wrapper #tabOptions').parent().outerWidth(true) - 50;
             $('.content-tabs').css({
                 'left': window.tabs_left + 'px',
                 'width': visibleWidth,
 
             });
 
-            setTimeout(function () {
-                $('.container-refresh').off('click');
-            }, 1000);
-
+            //更新宽高
             window.handleIframeContent = function () {
                 $(".tab_iframe").css({
                     height: "100%",
                     width: "100%"
                 });
             }
-            //
-            // $('#tab-pane').height($(window).height());
 
+            //容器变化时，更改容器高度
             $(window).resize(function(){
                 $('.content-wrapper,#app,#tab-content').css('height', $(window).height() - $('#pjax-container').css('padding-top').replace('px', ''));
             });
 
             $('.content-wrapper,#app,#tab-content').css('height', $(window).height() - $('#pjax-container').css('padding-top').replace('px', ''));
-            // $('.content-wrapper,#app,#tab-content').css('height',$('#pjax-container').height());
-
-            $('.dark-mode-switcher').click(function () {
-                $('iframe').each(function () {
-                    $(this).contents().find('body').toggleClass('dark-mode');
-                })
-            });
-
-            $('.menu-toggle').click(function () {
-                $('iframe').each(function () {
-                    $(this).contents().find('body').toggleClass('sidebar-collapse');
-                })
-            });
         });
     </script>
     @include('admin::partials.toastr')

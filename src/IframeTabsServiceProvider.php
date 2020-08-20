@@ -4,6 +4,7 @@ namespace Dcat\Admin\Extension\IframeTabs;
 
 use Dcat\Admin\Admin;
 use Dcat\Admin\Extension\IframeTabs\Middleware\ForceLogin;
+use http\Env\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,82 +25,52 @@ class IframeTabsServiceProvider extends ServiceProvider
             $this->loadTranslationsFrom($lang, IframeTabs::NAME);
         }
 
-        if ($migrations = $extension->migrations()) {
-            $this->loadMigrationsFrom($migrations);
-        }
-
         $this->app->booted(function () use ($extension) {
             $extension->routes(__DIR__.'/../routes/web.php');
         });
 
+        $assetPath = 'vendors/dcat-admin-extensions/iframe-tabs';
+
+        //生成静态文件
         if ($this->app->runningInConsole() && $assets = $extension->assets()) {
             $this->publishes(
-                [$assets => public_path('vendors/dcat-admin-extensions/iframe-tabs')],
+                [$assets => public_path($assetPath)],
                 'iframe-tabs'
             );
         }
 
-
+        //加载路由
         $this->app->booted(function () use($extension) {
            $extension->routes(__DIR__ . '/../routes/web.php');
         });
 
-        $layer_path = $extension->config('layer_path', '');
 
-        if (!file_exists(public_path($layer_path))) {
-            $layer_path = '';
-        }
-
-        Admin::booting(function () use ($layer_path) {
-            Admin::js('vendors/dcat-admin-extensions/iframe-tabs/bootstrap-tab.js');
-            Admin::js('vendors/dcat-admin-extensions/iframe-tabs/extends.js');
-
-            if ($layer_path) {
-                Admin::js($layer_path);
-            }
+        //加载js
+        Admin::booting(function () use($assetPath){
+            Admin::js($assetPath.'/bootstrap-tab.js');
+            Admin::js($assetPath.'/extends.js');
         });
 
         if ($this->inWeb()) {
 
-            Admin::booted(function () use ($layer_path, $extension) {
-
-                if (IframeTabs::isMinify() && $layer_path) {
-                    Admin::css(preg_replace('/^(.+)layer\.js.*$/i', '$1theme/default/layer.css?v=iframe-tabs', $layer_path));
-                }
-
+            Admin::booted(function () use ($assetPath, $extension) {
                 if (\Request::route()->getName() == 'iframes.index') {
-                    //Override view index hide partials.footer
+                    //首页
                     \View::prependNamespace('admin', __DIR__ . '/../resources/views/index');
 
-                    Admin::css($extension->config('tabs_css', 'vendors/dcat-admin-extensions/iframe-tabs/dashboard.css'));
+                    Admin::css($extension->config('tabs_css', $assetPath.'/dashboard.css'));
 
-                    $layout = config('admin.layout', ['fixed']);
-                    if (count($layout) == 1) { //['fixed sidebar-mini']
-                        $layout = explode(' ', $layout[0]);
-                    }
-                    //['fixed', 'sidebar-mini']
-                    if (count($layout) && !in_array('layout-boxed', $layout) && !in_array('fixed', $layout)) {
-
-                        array_push($layout, 'fixed');
-
-                        config(['admin.layout' => $layout]);
-                    }
+                    Admin::js($assetPath.'/jquery-2.1.4.js');
                 } else {
+        
 
                     $this->initSubPage();
 
+                    //更改布局
                     \View::prependNamespace('admin', __DIR__ . '/../resources/views/content');
-                    //Override view content hide partials.header and partials.sidebar
-                    //add scritp 'Back to top' in content
                     $this->contentScript();
-
-                    //Override content style ,reset style of '#pjax-container' margin-left:0
-                    Admin::css('vendors/dcat-admin-extensions/iframe-tabs/content.css');
-
-                    config(['admin.layout' => ['fixed']]); // iframe page no need layout ,set default to fixed .
+                    Admin::css($assetPath.'/content.css');
                 }
-
-                config(['admin.minify_assets' => false]);
             });
         }
     }
@@ -112,15 +83,9 @@ class IframeTabsServiceProvider extends ServiceProvider
     public function register()
     {
         app('router')->aliasMiddleware('iframe.login', ForceLogin::class);
-
-        Admin::booted(function () {
-
-            if ($this->inWeb()) {
-                IframeTabs::fixMinify();
-            }
-        });
     }
 
+    //判断是否在浏览器还是命令行
     protected function inWeb()
     {
         $c = request('c', '');
@@ -130,7 +95,7 @@ class IframeTabsServiceProvider extends ServiceProvider
     }
 
 
-
+    //初始化子页面, 添加回调等信息
     protected function initSubPage()
     {
         if (!in_array((new IframeTabs())->config('bind_urls', 'none'), ['new_tab', 'popup'])) {
@@ -189,44 +154,48 @@ class IframeTabsServiceProvider extends ServiceProvider
         $_list_after_save_ = $session->pull('_list_after_save_', '');
 
         $script = <<<EOT
-
         var _ifraem_id_ = '{$_ifraem_id_}';
-
         var _pjax = '{$_pjax}';
-
         var _list_ifraem_id_ = '{$_list_ifraem_id_}';
-
         var _list_after_save_ = '{$_list_after_save_}';
-
         window.Pops = [];
-
         if (_list_ifraem_id_ && !_list_after_save_)
         {
+            //获取你容器的
             var iframes = top.document.getElementsByTagName("iframe");
             for(var i in iframes)
             {
+                //找到对应的iframe
                 if (iframes[i].id == _list_ifraem_id_)
                 {
-                    var openner = iframes[i].contentWindow;
 
+                    //获取对应的对象
+                    var openner = iframes[i].contentWindow;
+                    //刷新
                     openner.$.pjax.reload('#pjax-container');
 
                     if (top.bind_urls =='new_tab')
                     {
+                        //新iframe页面
                         var tab_id = getCurrentId();
                         if(tab_id)
                         {
+                            //显示提示信息
                             top.toastr.success('{$_success_message_}');
+                            //关闭当前页面
                             top.closeTabByPageId(tab_id.replace(/^iframe_/i, ''));
                             doStop();
                         }
                     }
                     else if (top.bind_urls =='popup')
                     {
+                        //弹出窗口
                         var index = parent.layer.getFrameIndex(window.name);
                         if(index)
                         {
+                            //弹出提示信息
                             top.toastr.success('{$_success_message_}');
+                            //关闭页面
                             parent.layer.close(index);
                             doStop();
                         }
@@ -238,6 +207,7 @@ class IframeTabsServiceProvider extends ServiceProvider
             return;
         }
 
+        //如果是表单
         if(_ifraem_id_ && $('form').length)
         {
             $('form').append('<input type="hidden" name="_ifraem_id_" value="' + _ifraem_id_ + '" />');
@@ -247,16 +217,7 @@ class IframeTabsServiceProvider extends ServiceProvider
         {
             $('body').addClass('iframe-content');
 
-            if($('#terminal-box').length)
-            {
-                // fix laravel-admin-extensions/helpers terminal
-                $(window).load(function(){
-                    $('#terminal-box,.slimScrollDiv').css({
-                        height: $('#pjax-container').height() - 247 +'px'
-                    });
-                });
-            }
-
+            //面包宵
             $('body').on('click', '.breadcrumb li a', function() {
                 var url = $(this).attr('href');
                 if (url == top.iframes_index) {
@@ -390,6 +351,9 @@ class IframeTabsServiceProvider extends ServiceProvider
             {
                 var index = parent.layer.getFrameIndex(window.name);
                 parent.layer.close(index);
+            }
+
+            window.openTab = function() {
             }
 
             window.closeTab = function()

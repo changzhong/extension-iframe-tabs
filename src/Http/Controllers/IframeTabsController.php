@@ -13,23 +13,20 @@ class IframeTabsController extends Controller
     public function index(Content $content)
     {
         $iframeTabs = new IframeTabs();
-//        if (!$iframeTabs->boot()) {
-//            return redirect(admin_base_path('dashboard'));
-//        }
 
         $items = [
             'header' => '',
             'trans' => [
-                'oprations' => trans('admin.iframe_tabs.oprations'),
-                'refresh_current' => trans('admin.iframe_tabs.refresh_current'),
-                'close_current' => trans('admin.iframe_tabs.close_current'),
-                'close_all' => trans('admin.iframe_tabs.close_all'),
-                'close_other' => trans('admin.iframe_tabs.close_other'),
-                'open_in_new' => trans('admin.iframe_tabs.open_in_new'),
-                'open_in_pop' => trans('admin.iframe_tabs.open_in_pop'),
-                'scroll_left' => trans('admin.iframe_tabs.scroll_left'),
-                'scroll_right' => trans('admin.iframe_tabs.scroll_right'),
-                'scroll_current' => trans('admin.iframe_tabs.scroll_current'),
+                'oprations' => trans('iframe-tabs::iframe.oprations'),
+                'refresh_current' => trans('iframe-tabs::iframe.refresh_current'),
+                'close_current' => trans('iframe-tabs::iframe.close_current'),
+                'close_all' => trans('iframe-tabs::iframe.close_all'),
+                'close_other' => trans('iframe-tabs::iframe.close_other'),
+                'open_in_new' => trans('iframe-tabs::iframe.open_in_new'),
+                'open_in_pop' => trans('iframe-tabs::iframe.open_in_pop'),
+                'scroll_left' => trans('iframe-tabs::iframe.scroll_left'),
+                'scroll_right' => trans('iframe-tabs::iframe.scroll_right'),
+                'scroll_current' => trans('iframe-tabs::iframe.scroll_current'),
                 'refresh_succeeded' => trans('admin.refresh_succeeded'),
             ],
             'home_uri' => admin_base_path('dashboard'),
@@ -55,9 +52,9 @@ class IframeTabsController extends Controller
     public function dashboard(Content $content)
     {
         return $content
-            ->header('Defautl page')
-            ->description('Defautl page')
-            ->body("aaaaaaaaa");
+            ->header('首页')
+            ->description('首页')
+            ->body("首页");
     }
 
 }
