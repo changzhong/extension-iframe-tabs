@@ -714,6 +714,12 @@ Dcat.ready(function () {
             urlType: 'absolute',
             icon: icon
         });
+
+        $('.dark-mode body').addClass('dark-mode');
+        $(this).attr('data-pageid', id);
+        //更改菜单为选中
+        $('.nav-sidebar').find('a.active').removeClass('active');
+        $(this).addClass('active');
         return false;
     });
 });
