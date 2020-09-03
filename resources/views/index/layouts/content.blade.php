@@ -67,6 +67,12 @@
                     maxmin: true, //开启最大化最小化按钮
                     area: area,
                     //offset: 'rb'
+                    full: function(el) {
+                        $(el).find('.layui-layer-content iframe').css({'height':$(el).height()})
+                    },
+                    restore: function(el) {
+                        $(el).find('.layui-layer-content iframe').css({'height':$(el).height()})
+                    }
                 });
                 window.Pops.push(index);
 
@@ -95,13 +101,6 @@
                     icon = '<i class="fa fa-file-text"></i>';
                 }
 
-                if (url.indexOf("?") !== -1  ) {
-                    url += '&iframe=1'
-                } else {
-                    url += '?iframe=1'
-                }
-
-                console.log('url', url);
                 addTabs({
                     id: page_id || url.replace(/\W/g, '_'),
                     title: title || 'New page',
@@ -129,6 +128,55 @@
                         return false; //退出循环
                     }
                 });
+            });
+
+
+            //左边菜单点击事件
+            $('.iframe-link').off('click').on('click', function() {
+                event.preventDefault();
+                var url = $(this).attr('href');
+                if (!url || url == '#' || /^javascript|\(|\)/i.test(url)) {
+                    return;
+                }
+
+
+                if (window.pass_urls) {
+                    for (var i in window.pass_urls) {
+                        if (url.indexOf(window.pass_urls[i]) > -1) {
+                            return true;
+                        }
+                    }
+                }
+
+                var icon = '<i class="fa fa-file-text"></i>';
+                if ($(this).find('i.fa').length) {
+                    icon = $(this).find('i.fa').prop("outerHTML");
+                }
+                var span = $(this).find('p');
+
+                var path = url.replace(/^(https?:\/\/[^\/]+?)(\/.+)$/, '$2');
+
+                var id = path == window.home_uri ? '_admin_dashboard' : path.replace(/\W/g, '_');
+
+                addTabs({
+                    id: id,
+                    title: span.length ? span.text() : $(this).text().length ? $(this).text() : '*',
+                    close: true,
+                    url: url,
+                    urlType: 'absolute',
+                    icon: icon
+                });
+
+
+                $('.dark-mode body').addClass('dark-mode');
+
+                $(this).attr('data-pageid', id);
+
+                //更改菜单为选中
+                $('.nav-sidebar').find('a.active').removeClass('active');
+                $(this).addClass('active');
+
+                return false;
             });
 
             //首页
@@ -182,16 +230,6 @@
             });
 
             $('.content-wrapper,#app,#tab-content').css('height', $(window).height() - $('#pjax-container').css('padding-top').replace('px', ''));
-
-            $('.dark-mode-switcher').click(function () {
-                $('iframe').each(function () {
-                    if($('body').hasClass('dark-mode')) {
-                        $(this).contents().find('body').addClass('dark-mode');
-                    } else {
-                        $(this).contents().find('body').removeClass('dark-mode');
-                    }
-                })
-            });
         });
     </script>
     @include('admin::partials.toastr')

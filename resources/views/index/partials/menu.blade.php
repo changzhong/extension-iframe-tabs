@@ -3,6 +3,7 @@
 
     $layer = $item['layer'] ?? 0;
 @endphp
+
 @if($builder->visible($item))
     @if(isset($item['is_header']))
         <li class="nav-header">

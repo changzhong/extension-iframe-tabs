@@ -696,7 +696,7 @@ Dcat.ready(function () {
             return;
         }
 
-        var icon = '<i class="fa fa-file-text"></i>';
+        var icon = '<i class="fa feather icon-circle"></i>';
         if ($(this).find('i.fa').length) {
             icon = $(this).find('i.fa').prop("outerHTML");
         }
@@ -706,20 +706,20 @@ Dcat.ready(function () {
 
         var id = path == window.home_uri ? '_admin_dashboard' : path.replace(/\W/g, '_');
 
+        var title = span.length ? span.text() : (
+            $(this).text().replace(/(^\s*)|(\s*$)/g, "").length > 0 ? $(this).text() : (
+                $(this).attr('title') ? $(this).attr('title'): '新页面'
+            )
+        );
+
         top.addTabs({
             id: id,
-            title: span.length ? span.text() : $(this).text().length ? $(this).text() : '*',
+            title: title,
             close: true,
             url: url,
             urlType: 'absolute',
             icon: icon
         });
-
-        $('.dark-mode body').addClass('dark-mode');
-        $(this).attr('data-pageid', id);
-        //更改菜单为选中
-        $('.nav-sidebar').find('a.active').removeClass('active');
-        $(this).addClass('active');
         return false;
     });
 });
@@ -773,11 +773,6 @@ $(function () {
             action: function (e, $selector, rightClickEvent) {
                 var pageId = getPageId(findTabElement(rightClickEvent.target));
                 var url = getTabUrlById(pageId);
-                if (url.indexOf("?") !== -1) {
-                    url += '&iframe=0'
-                } else {
-                    url += '?iframe=0'
-                }
                 var title = findTabTitle(pageId);
                 title = title ? title.text() : false;
                 window.openPop(url, title, [popWidth, '600px']);
@@ -788,11 +783,6 @@ $(function () {
             action: function (e, $selector, rightClickEvent) {
                 var pageId = getPageId(findTabElement(rightClickEvent.target));
                 var url = getTabUrlById(pageId);
-                if (url.indexOf("?") !== -1) {
-                    url += '&iframe=0'
-                } else {
-                    url += '?iframe=0'
-                }
                 window.open(url);
 
             }

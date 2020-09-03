@@ -22,7 +22,7 @@ class ForceLogin
 //        }
 
         $content = $response->getContent();
-        $message = trans('admin.iframe_tabs.goto_login');
+        $message = trans('iframe-tabs::iframe.goto_login');
         $script = <<<EOT
 
     <script>
