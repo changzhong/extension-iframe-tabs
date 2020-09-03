@@ -802,13 +802,19 @@ function searchMenu() {
     if(text.length > 0) {
         $('.all-menu').addClass('hidden');
         $('.clear-search').removeClass('hidden');
+        var str = '<ul class=" flex-column nav nav-pills nav-sidebar" data-widget="treeview" style="padding-top: 10px">';
+
         $(".all-menu li a.iframe-link").each(function () {
             // console.log($(this).text().replace(/(^\s*)|(\s*$)/g, ""));
             if($(this).text().replace(/(^\s*)|(\s*$)/g, "").indexOf(text) != -1) {
                 $(this).addClass('nav-link');
-                $('.search-menu').append('<li class="nav-item">'+$(this).parent().html()+'</li>');
+                str += '<li class="nav-item">'+$(this).parent().html()+'</li>';
             }
         })
+
+        str += '</ul>';
+        console.log('str', str);
+        $('.search-menu').html(str).removeClass('hidden');
 
 
         $('.iframe-link').off('click').on('click', function() {
@@ -858,6 +864,7 @@ function searchMenu() {
         });
     } else {
         $('.clear-search').addClass('hidden');
+        $('.search-menu').html('');
         $('.all-menu').removeClass('hidden');
     }
 }

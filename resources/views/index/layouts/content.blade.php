@@ -112,23 +112,23 @@
             }
 
             //顶部的标签点击事件,更改左边菜单的选中
-            $('body').on('click', '#tab-menu a.menu_tab', function () {
-                var pageId = getPageId(this);
-                $(".nav-sidebar li a").each(function () {
-                    var $ele = $(this);
-                    if ($ele.attr('data-pageid') == pageId) {
-                        if(!$ele.parents('.has-treeview').hasClass('menu-open')) {
-                            $('.menu-open .nav-treeview').css({'display': 'none'});
-                            $('.menu-open').removeClass('menu-open');
-                            $ele.parents('.has-treeview').addClass('menu-open');
-                            $ele.parents('.has-treeview .nav-treeview').css({'display': 'block'});
-                        }
-                        $('.nav-sidebar').find('a.active').removeClass('active');
-                        $ele.addClass('active');
-                        return false; //退出循环
-                    }
-                });
-            });
+            // $('body').on('click', '#tab-menu a.menu_tab', function () {
+            //     var pageId = getPageId(this);
+            //     $(".nav-sidebar li a").each(function () {
+            //         var $ele = $(this);
+            //         if ($ele.attr('data-pageid') == pageId) {
+            //             if(!$ele.parents('.has-treeview').hasClass('menu-open')) {
+            //                 $('.menu-open .nav-treeview').css({'display': 'none'});
+            //                 $('.menu-open').removeClass('menu-open');
+            //                 $ele.parents('.has-treeview').addClass('menu-open');
+            //                 $ele.parents('.has-treeview .nav-treeview').css({'display': 'block'});
+            //             }
+            //             $('.nav-sidebar').find('a.active').removeClass('active');
+            //             $ele.addClass('active');
+            //             return false; //退出循环
+            //         }
+            //     });
+            // });
 
 
             //左边菜单点击事件

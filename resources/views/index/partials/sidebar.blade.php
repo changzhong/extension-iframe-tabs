@@ -17,9 +17,10 @@
                     <input type="text" placeholder="菜单搜索" class="form-control" onchange="searchMenu()" id="searchInput">
                     <a class="clear-search hidden" title="清空" onclick="clearSearch()" href="javascript:;">×</a>
                 </div>
-                <ul class="nav nav-pills nav-sidebar flex-column search-menu" data-widget="treeview" style="padding-top: 10px">
+                <div class="search-menu">
+                 
+                </div>
 
-                </ul>
                 <ul class="nav nav-pills nav-sidebar flex-column all-menu" data-widget="treeview" style="padding-top: 10px">
                     {!! admin_section(AdminSection::LEFT_SIDEBAR_MENU_TOP) !!}
 
