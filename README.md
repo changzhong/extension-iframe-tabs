@@ -1,6 +1,8 @@
 dcat-admin iframe多窗口扩展
 ======
 
+* dcatadmin版本需要1.7.0以上
+
 1.安装扩展
 ```
 composer require changzhong/extension-iframe-tabs
