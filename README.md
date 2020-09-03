@@ -29,10 +29,16 @@ composer require changzhong/extension-iframe-tabs
     ],
 ```
 
-5.打开链接 你的域名/admin即可
+5.清除缓存
+```shell script
+php artisan cache:clear;
+php artisan view:clear;
+```
+6.打开链接 你的域名/admin即可
 
 
 给a标签添加class=pop-link为弹窗打开，添加 class=iframe-link为新添加iframe窗口
+
 
 
 
