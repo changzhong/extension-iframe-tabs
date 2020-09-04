@@ -134,13 +134,6 @@ var addTabs = function (options) {
                 }); //0代表加载的风格，支持0-2
             }
 
-            if (options.url.indexOf("?") !== -1) {
-                options.url += '&iframe=1'
-            } else {
-                options.url += '?iframe=1'
-            }
-
-            console.log('options.url', options.url);
             var $iframe = $("<iframe></iframe>").attr("src", options.url).css({
                 "width": "100%",
                 "height": "100%"
