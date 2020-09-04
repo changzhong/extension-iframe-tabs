@@ -13,6 +13,12 @@
             </div>
 
             <div class="sidebar pb-3">
+                @if(cache('last_update_time'))
+                    <div class="async-div bg-cyan" style="margin-bottom: 10px">上次同步数据时间
+                        <br><b id="last_update_time">{!! date('Y-m-d H:i', cache('last_update_time')) !!}</b>
+                    </div>
+                @endif
+
                 <div class="search-menu-container">
                     <input type="text" placeholder="菜单搜索" class="form-control" onchange="searchMenu()" id="searchInput">
                     <a class="clear-search hidden" title="清空" onclick="clearSearch()" href="javascript:;">×</a>
