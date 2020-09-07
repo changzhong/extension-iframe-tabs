@@ -134,6 +134,7 @@ var addTabs = function (options) {
                 }); //0代表加载的风格，支持0-2
             }
 
+            // console.log('options.url', options.url);
             var $iframe = $("<iframe></iframe>").attr("src", options.url).css({
                 "width": "100%",
                 "height": "100%"
@@ -682,14 +683,23 @@ Dcat.ready(function () {
     });
 
     //左边菜单点击事件
-    $('.iframe-link').off('click').on('click', function () {
+    $('.iframe-link').off('click').on('click', function() {
         event.preventDefault();
         var url = $(this).attr('href');
         if (!url || url == '#' || /^javascript|\(|\)/i.test(url)) {
             return;
         }
 
-        var icon = '<i class="fa feather icon-circle"></i>';
+
+        if (window.pass_urls) {
+            for (var i in window.pass_urls) {
+                if (url.indexOf(window.pass_urls[i]) > -1) {
+                    return true;
+                }
+            }
+        }
+
+        var icon = '<i class="fa fa-file-text"></i>';
         if ($(this).find('i.fa').length) {
             icon = $(this).find('i.fa').prop("outerHTML");
         }
@@ -699,22 +709,47 @@ Dcat.ready(function () {
 
         var id = path == window.home_uri ? '_admin_dashboard' : path.replace(/\W/g, '_');
 
-        var title = span.length ? span.text() : (
-            $(this).text().replace(/(^\s*)|(\s*$)/g, "").length > 0 ? $(this).text() : (
-                $(this).attr('title') ? $(this).attr('title'): '新页面'
-            )
-        );
-
-        top.addTabs({
+        addTabs({
             id: id,
-            title: title,
+            title: span.length ? span.text() : $(this).text().length ? $(this).text() : '*',
             close: true,
             url: url,
             urlType: 'absolute',
             icon: icon
         });
+
+
+        $('.dark-mode body').addClass('dark-mode');
+
+        $(this).attr('data-pageid', id);
+
+        //更改菜单为选中
+        $('.nav-sidebar').find('a.active').removeClass('active');
+        $(this).addClass('active');
+
         return false;
     });
+
+
+    //顶部的标签点击事件,更改左边菜单的选中
+    $('body').on('click', '#tab-menu a.menu_tab', function () {
+        var pageId = getPageId(this);
+        $(".nav-sidebar li a").each(function () {
+            var $ele = $(this);
+            if ($ele.attr('data-pageid') == pageId) {
+                if(!$ele.parents('.has-treeview').hasClass('menu-open')) {
+                    $('.menu-open .nav-treeview').css({'display': 'none'});
+                    $('.menu-open').removeClass('menu-open');
+                    $ele.parents('.has-treeview').addClass('menu-open');
+                    $ele.parents('.has-treeview .nav-treeview').css({'display': 'block'});
+                }
+                $('.nav-sidebar').find('a.active').removeClass('active');
+                $ele.addClass('active');
+                return false; //退出循环
+            }
+        });
+    });
+
 });
 
 $(function () {
@@ -806,7 +841,6 @@ function searchMenu() {
         })
 
         str += '</ul>';
-        console.log('str', str);
         $('.search-menu').html(str).removeClass('hidden');
 
 

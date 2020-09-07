@@ -111,74 +111,6 @@
                 });
             }
 
-            //顶部的标签点击事件,更改左边菜单的选中
-            $('body').on('click', '#tab-menu a.menu_tab', function () {
-                var pageId = getPageId(this);
-                $(".nav-sidebar li a").each(function () {
-                    var $ele = $(this);
-                    if ($ele.attr('data-pageid') == pageId) {
-                        if(!$ele.parents('.has-treeview').hasClass('menu-open')) {
-                            $('.menu-open .nav-treeview').css({'display': 'none'});
-                            $('.menu-open').removeClass('menu-open');
-                            $ele.parents('.has-treeview').addClass('menu-open');
-                            $ele.parents('.has-treeview .nav-treeview').css({'display': 'block'});
-                        }
-                        $('.nav-sidebar').find('a.active').removeClass('active');
-                        $ele.addClass('active');
-                        return false; //退出循环
-                    }
-                });
-            });
-
-
-            //左边菜单点击事件
-            $('.iframe-link').off('click').on('click', function() {
-                event.preventDefault();
-                var url = $(this).attr('href');
-                if (!url || url == '#' || /^javascript|\(|\)/i.test(url)) {
-                    return;
-                }
-
-
-                if (window.pass_urls) {
-                    for (var i in window.pass_urls) {
-                        if (url.indexOf(window.pass_urls[i]) > -1) {
-                            return true;
-                        }
-                    }
-                }
-
-                var icon = '<i class="fa fa-file-text"></i>';
-                if ($(this).find('i.fa').length) {
-                    icon = $(this).find('i.fa').prop("outerHTML");
-                }
-                var span = $(this).find('p');
-
-                var path = url.replace(/^(https?:\/\/[^\/]+?)(\/.+)$/, '$2');
-
-                var id = path == window.home_uri ? '_admin_dashboard' : path.replace(/\W/g, '_');
-
-                addTabs({
-                    id: id,
-                    title: span.length ? span.text() : $(this).text().length ? $(this).text() : '*',
-                    close: true,
-                    url: url,
-                    urlType: 'absolute',
-                    icon: icon
-                });
-
-
-                $('.dark-mode body').addClass('dark-mode');
-
-                $(this).attr('data-pageid', id);
-
-                //更改菜单为选中
-                $('.nav-sidebar').find('a.active').removeClass('active');
-                $(this).addClass('active');
-
-                return false;
-            });
-
             //首页
             if (window == top) {
                 addTabs({
@@ -199,8 +131,6 @@
             // $('body').on('click', '.navbar-header a', function () {
             //     return false;
             // });
-
-
 
             //右上角标签操作鼠标滑出隐藏菜单
             $('#tabOptions .dropdown-menu').mouseleave(function () {
@@ -230,17 +160,6 @@
             });
 
             $('.content-wrapper,#app,#tab-content').css('height', $(window).height() - $('#pjax-container').css('padding-top').replace('px', ''));
-
-            // 切换深色主题时
-            $('.dark-mode-switcher').click(function () {
-                $('iframe').each(function () {
-                    if($('body').hasClass('dark-mode')) {
-                        $(this).contents().find('body').addClass('dark-mode');
-                    } else {
-                        $(this).contents().find('body').removeClass('dark-mode');
-                    }
-                })
-            });
         });
     </script>
     @include('admin::partials.toastr')
