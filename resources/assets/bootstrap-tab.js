@@ -96,7 +96,7 @@ var addTabs = function (options) {
     if (window.use_icon) {
         options.title = options.icon + options.title;
     } else {
-        options.title = '<i class="fa fa-fa-ban" style="visibility:hiden;" ></i>' + options.title;
+        options.title = '<i class="fa fa-fa-ban" style="visibility:hidden;" ></i>' + options.title;
     }
 
     //判断这个id的tab是否已经存在,不存在就新建一个
@@ -730,7 +730,18 @@ Dcat.ready(function () {
         return false;
     });
 
+    // 切换深色主题时
+    $('.dark-mode-switcher').click(function () {
+        $('iframe').each(function () {
+            if($('body').hasClass('dark-mode')) {
+                $(this).contents().find('body').addClass('dark-mode');
+            } else {
+                $(this).contents().find('body').removeClass('dark-mode');
+            }
+        })
+    });
 
+    
     //顶部的标签点击事件,更改左边菜单的选中
     $('body').on('click', '#tab-menu a.menu_tab', function () {
         var pageId = getPageId(this);

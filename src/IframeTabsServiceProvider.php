@@ -60,9 +60,9 @@ class IframeTabsServiceProvider extends ServiceProvider
 
                     Admin::css($extension->config('tabs_css', $assetPath.'/dashboard.css'));
 
-                    Admin::js($assetPath.'/jquery-2.1.4.js');
+                    Admin::headerJs($assetPath.'/jquery-2.1.4.js');
                 } else {
-        
+
 
                     $this->initSubPage();
 

@@ -24,7 +24,7 @@
                     <a class="clear-search hidden" title="清空" onclick="clearSearch()" href="javascript:;">×</a>
                 </div>
                 <div class="search-menu">
-                 
+
                 </div>
 
                 <ul class="nav nav-pills nav-sidebar flex-column all-menu" data-widget="treeview" style="padding-top: 10px">
